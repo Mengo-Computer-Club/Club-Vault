@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Club Vault</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Courier New', Courier, monospace;
+            background: whitesmoke;
+
+        }
+        .error {
+            color: orangered;
+            font-size: small;
+            
+        }
+        #vault_error {
+            margin-bottom: 5px;
+            display: none;
+        }
+        #main {
+            width: 25%;
+            padding: 25px;
+            margin-top: 150px;
+            border: solid 1px black;
+            border-radius: 5px;
+            background-color: white;
+        }
+        .bbtn {
+            background: white;
+            border: solid 1px black;
+            padding: 3px;
+            cursor: pointer;
+        }
+        .bbtn:hover {
+            color: white;
+            background: black;
+        }
+        .binput {
+            height: 20px;
+            border: solid 1px black;
+        }
+    </style>
+</head>
+<body>
+    <center>
+        <div id="main">
+            <h1>Club Vault</h1>
+            <!--Bad Practice future problem-->
+            <p style="margin: 0;">Vault Code<br> <input name="code" type="text" placeholder="140" class="binput"></p>
+            <span class="error" id="vault_error">Invalid Vault Code</span><br>
+            <button class="bbtn">Next</button><br>
+            <p>OR (If you don't have)</p>
+            <a href="/create"><button class="bbtn">Create Vault</button></a>
+        </div>
+    </center>
+</body>
+</html>

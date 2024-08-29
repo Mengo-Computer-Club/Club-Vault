@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Club Vault - Create</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Courier New', Courier, monospace;
+            background: whitesmoke;
+
+        }
+
+        .error {
+            color: orangered;
+            font-size: small;
+        }
+
+        #main {
+            width: 25%;
+            padding: 25px;
+            margin-top: 150px;
+            border: solid 1px black;
+            border-radius: 5px;
+            background-color: white;
+        }
+
+        .bbtn {
+            background: white;
+            border: solid 1px black;
+            padding: 3px;
+            cursor: pointer;
+        }
+
+        .bbtn:hover {
+            color: white;
+            background: black;
+        }
+
+        .binput {
+            height: 20px;
+            border: solid 1px black;
+        }
+        .error {
+            color: orangered;
+        }
+    </style>
+    <script src="/static/axios.min.js"></script>
+</head>
+
+<body>
+    <center>
+        <div id="main">
+            <h1>Create Vault</h1>
+            <p>Choose Name<br><input type="text" placeholder="Fun Vault" class="binput" id="name"></p>
+            <p>Choose Passcode (6 digits) <br><input type="password" placeholder="123456" class="binput" id="passcode"></p>
+            <span class="error" id="error"></span><br><br>
+            <button class="bbtn" id="create_bt">Create Vault</button>
+        </div>
+        <script>
+            document.getElementById('create_bt').onclick = () => {
+                // Our main validation checks are going to be on the passcode
+                let name = document.getElementById('name').value
+                let passcode = document.getElementById('passcode').value
+                if (name.length == 0 || passcode.length == 0) {
+                    document.getElementById('error').innerText = "All fields must be filled"
+                    return
+                }
+                if (isNaN(Number(passcode))) {
+                    document.getElementById('error').innerText = "Passcode must contain only digits"
+                    return
+                }
+                if (passcode.length != 6) {
+                    document.getElementById('error').innerText = "Passcode must have six characters"
+                    return
+                }
+                document.getElementById('error').innerText = ""
+                axios.post('/create_handler', {
+                    name: name,
+                    passcode: passcode,
+                })
+                    .then(function (response) {
+                        localStorage.setItem('session_id', response.data.session_id)
+                        localStorage.setItem('name',response.data.name)
+                        localStorage.setItem('vault_id', response.data.vault_id)
+                        window.location = '/dash'
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            }
+        </script>
+    </center>
+</body>
+
+</html>

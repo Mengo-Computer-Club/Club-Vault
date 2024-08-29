@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Club Vault - Dashboard</title>
+    <style>
+        body {
+            margin: 0;
+            background-color: whitesmoke;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        #header {
+            width: 100%;
+            height: 50px;
+            background-color: white;
+            border-bottom: solid 1px black;
+        }
+
+        #logo {
+            margin: 0;
+            margin-top: 15px;
+            margin-left: 10px;
+        }
+
+        #main {
+            height: 80vh;
+            width: 95%;
+            background-color: white;
+            border: solid 1px black;
+            border-radius: 5px;
+            margin-left: 40px;
+            padding: 10px;
+            margin-top: 20px;
+        }
+
+        .bbtn {
+            background: white;
+            border: solid 1px black;
+            padding: 3px;
+            cursor: pointer;
+        }
+
+        .bbtn:hover {
+            color: white;
+            background: black;
+        }
+
+        #main_head {
+            border-bottom: solid 1px black;
+            height: 70px;
+        }
+
+        #main_head h1 {
+            float: left;
+            font-size: 25px;
+            margin-top: 22px;
+            margin-left: 10px;
+        }
+
+        #main_head button {
+            float: right;
+            height: 40px;
+            width: 80px;
+            margin-top: 13px;
+        }
+
+        #file_table {
+            width: 100%;
+        }
+
+        #file_table th {
+            font-size: 20px;
+        }
+
+        table,
+        th,
+        td {
+            border: 1px solid black;
+            border-collapse: collapse;
+            padding: 10px;
+        }
+
+        a {
+            color: blue;
+        }
+
+        a:hover {
+            color: black;
+        }
+
+        /**Some Stuff**/
+        /**************************\
+  Basic Modal Styles
+\**************************/
+
+        .modal {
+            font-family: -apple-system, BlinkMacSystemFont, avenir next, avenir, helvetica neue, helvetica, ubuntu, roboto, noto, segoe ui, arial, sans-serif;
+        }
+
+        .modal__overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal__container {
+            background-color: #fff;
+            padding: 30px;
+            max-width: 500px;
+            max-height: 100vh;
+            /* border-radius: 4px; */
+            overflow-y: auto;
+            box-sizing: border-box;
+            border: solid 3px black;
+        }
+
+        .modal__header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal__title {
+            margin-top: 0;
+            margin-bottom: 0;
+            font-weight: 600;
+            font-size: 1.25rem;
+            line-height: 1.25;
+            color: black;
+            box-sizing: border-box;
+        }
+
+        .modal__close {
+            background: transparent;
+            border: 0;
+        }
+
+        .modal__header .modal__close:before {
+            content: "\2715";
+        }
+
+        .modal__content {
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+            line-height: 1.5;
+            color: rgba(0, 0, 0, .8);
+        }
+
+        .modal__btn {
+            background: white;
+            border: solid 1px black;
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        .modal__btn:focus,
+        .modal__btn:hover {
+            color: white;
+            background: black;
+        }
+
+        .modal__btn-primary {
+            background-color: black;
+            color: #fff;
+        }
+
+        .modal__btn-primary:focus {
+            background-color: white;
+            color: black;
+        }
+
+
+        /**************************\
+  Demo Animation Style
+\**************************/
+        @keyframes mmfadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes mmfadeOut {
+            from {
+                opacity: 1;
+            }
+
+            to {
+                opacity: 0;
+            }
+        }
+
+        @keyframes mmslideIn {
+            from {
+                transform: translateY(15%);
+            }
+
+            to {
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes mmslideOut {
+            from {
+                transform: translateY(0);
+            }
+
+            to {
+                transform: translateY(-10%);
+            }
+        }
+
+        .micromodal-slide {
+            display: none;
+        }
+
+        .micromodal-slide.is-open {
+            display: block;
+        }
+
+        .micromodal-slide[aria-hidden="false"] .modal__overlay {
+            animation: mmfadeIn .3s cubic-bezier(0.0, 0.0, 0.2, 1);
+        }
+
+        .micromodal-slide[aria-hidden="false"] .modal__container {
+            animation: mmslideIn .3s cubic-bezier(0, 0, .2, 1);
+        }
+
+        .micromodal-slide[aria-hidden="true"] .modal__overlay {
+            animation: mmfadeOut .3s cubic-bezier(0.0, 0.0, 0.2, 1);
+        }
+
+        .micromodal-slide[aria-hidden="true"] .modal__container {
+            animation: mmslideOut .3s cubic-bezier(0, 0, .2, 1);
+        }
+
+        .micromodal-slide .modal__container,
+        .micromodal-slide .modal__overlay {
+            will-change: transform;
+        }
+
+
+        #logout_dialog {
+            margin: 5px;
+            border-color: red;
+            color:red;
+        }
+        #logout_dialog:hover {
+            background-color: red;
+            color: #fff;
+        }
+    </style>
+    <script src="/static/micromodal.min.js"></script>
+    <script src="/static/axios.min.js"></script>
+    <script>
+        MicroModal.init()
+    </script>
+</head>
+
+<body>
+    <div id="header">
+        <h1 id="logo">Club Vault</h1>
+    </div>
+    <div class="modal micromodal-slide" id="modal-1" aria-hidden="true">
+        <div class="modal__overlay" tabindex="-1" data-micromodal-close>
+            <div class="modal__container" role="dialog" aria-modal="true" aria-labelledby="modal-1-title">
+                <header class="modal__header">
+                    <h2 class="modal__title" id="modal-1-title">
+                        Micromodal
+                    </h2>
+                    <button class="modal__close" aria-label="Close modal" data-micromodal-close></button>
+                </header>
+                <main class="modal__content" id="modal-1-content">
+                    <p>
+                        Try hitting the <code>tab</code> key and notice how the focus stays within the modal itself.
+                        Also, <code>esc</code> to close modal.
+                    </p>
+                </main>
+                <footer class="modal__footer">
+                    <button class="modal__btn modal__btn-primary">Continue</button>
+                    <button class="modal__btn" data-micromodal-close
+                        aria-label="Close this dialog window">Close</button>
+                </footer>
+            </div>
+        </div>
+    </div>
+    <div class="modal micromodal-slide" id="startup_modal" aria-hidden="true">
+        <div class="modal__overlay" tabindex="-1" data-micromodal-close>
+            <div class="modal__container" role="dialog" aria-modal="true" aria-labelledby="modal-1-title">
+                <header class="modal__header">
+                    <h2 class="modal__title" id="modal-1-title">
+                        Attention
+                    </h2>
+                    <button class="modal__close" aria-label="Close modal" data-micromodal-close></button>
+                </header>
+                <main class="modal__content" id="modal-1-content">
+                    <p>
+                        Write down or memorize your vault id since it is used in opening the vault
+                    </p>
+                </main>
+                <footer class="modal__footer">
+                    <!-- <button class="modal__btn modal__btn-primary">Continue</button> -->
+                    <button class="modal__btn" data-micromodal-close aria-label="Close this dialog window">Ok</button>
+                </footer>
+            </div>
+        </div>
+    </div>
+    <div class="modal micromodal-slide" id="upload_modal" aria-hidden="true">
+        <div class="modal__overlay" tabindex="-1" data-micromodal-close>
+            <div class="modal__container" role="dialog" aria-modal="true" aria-labelledby="modal-1-title">
+                <header class="modal__header">
+                    <h2 class="modal__title" id="modal-1-title">
+                        Upload File
+                    </h2>
+                    <button class="modal__close" aria-label="Close modal" data-micromodal-close></button>
+                </header>
+                <main class="modal__content" id="modal-1-content">
+                    <p>
+                        <input type="file" id="file">
+                    </p>
+                </main>
+                <footer class="modal__footer">
+                    <button class="modal__btn modal__btn-primary" id="upload_bt">Upload</button>
+                    <button class="modal__btn" data-micromodal-close
+                        aria-label="Close this dialog window">Close</button>
+                </footer>
+            </div>
+        </div>
+    </div>
+    <div id="main">
+        <div id="main_head">
+            <h1>Vault Name: <span id="vname">Didn't Work</span> ID: <span id="vid">321</span></h1>
+            <div>
+                <button class="bbtn" id="logout_dialog">Close Vault</button>
+                <button class="bbtn" id="upload_dialog">Upload</button>
+            </div>
+        </div>
+        <div id="files">
+            <table id="file_table">
+                <tr>
+                    <th>File Name</th>
+                    <th>File Size</th>
+                    <th>When Uploaded</th>
+                    <th></th>
+                </tr>
+                <tr>
+                    <td>Cute pic.jpg</td>
+                    <td>400Kb</td>
+                    <td>08/08/2006 at 8:00 AM</td>
+                    <td>
+                        <a href="#">Delete</a>
+                        <a href="#">Download</a>
+                    </td>
+                </tr>
+
+            </table>
+        </div>
+    </div>
+    <script>
+        function format_filesize(value) {
+            // Write a better more robust version next time.
+            // But this works for now
+            let valuekb = Math.round(value / 1000)
+            if (valuekb < 1) {
+                return `${value}B`
+            }
+            let valuemb = Math.round(valuekb / 1000)
+            if (valuemb < 1) {
+                return `${valuekb}Kb`
+            }
+            let valuegb = Math.round(valuemb / 1000)
+            if (valuegb < 1) {
+                return `${valuemb}Mb`
+            }
+            return `${valuegb}Gb`
+        }
+        function format_datetime(timestamp) {
+            let date = new Date(timestamp)
+            return `${String(date.getDate()).padStart(2, '0')}/${String(date.getMonth()).padStart(2,'0')}/${date.getFullYear()} at ${String(date.getHours()).padStart(2,'0')}:${String(date.getMinutes()).padStart(2,'0')} hours`
+        }
+        function create_td(text) {
+            let td = document.createElement('td')
+            td.innerText = text
+            return td
+        }
+        function create_bts(filename) {
+            let td = document.createElement('td')
+            let a1 = document.createElement('a')
+            a1.href = `/delete?session_id=${localStorage.getItem('session_id')}&filename=${filename}`
+            a1.innerText = 'Delete'
+            a1.style = 'margin-right:7px;'
+            let a2 = document.createElement('a')
+            a2.href = `/download?session_id=${localStorage.getItem('session_id')}&filename=${filename}`
+            a2.innerText = 'Download'
+            td.appendChild(a1)
+            td.appendChild(a2)
+            return td
+        }
+        document.getElementsByTagName('body')[0].onload = () => {
+            document.getElementById('vname').innerText = localStorage.getItem('name')
+            document.getElementById('vid').innerText = localStorage.getItem('vault_id')
+            if (Boolean("{{ from_create }}")) { // TODO: This is not doing what it is supposed to do (redo)
+                MicroModal.show("startup_modal")
+            }
+            axios.get(`/get_files?session_id=${localStorage.getItem('session_id')}`)
+            .then(function(response) {
+                for (i in response.data.files) {
+                    let file = response.data.files[i]
+                    let root = document.createElement('tr')
+                    root.appendChild(create_td(file.oname))
+                    root.appendChild(create_td(format_filesize(Number(file.filesize))))
+                    root.appendChild(create_td(format_datetime(Number(file.when))))
+                    root.appendChild(create_bts(file.filename))
+                    document.getElementById('file_table').appendChild(root)
+                }
+            })
+            .catch(function(response) {
+                console.log(response)
+            })
+        }
+        document.getElementById('upload_dialog').onclick = () => {
+            MicroModal.show('upload_modal')
+        }
+        document.getElementById('upload_bt').onclick = () => {
+            let file = document.getElementById('file').files[0]
+            let fd = new FormData()
+            fd.append('file', file)
+            fd.append('session', localStorage.getItem('session_id'))
+            fd.append('oname', file.name)
+            fd.append('size', file.size)
+            fd.append('created', Date.now())
+            axios.post('/upload_handler', fd, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                }
+            })
+            .then(function(resp) {
+                console.log(resp)
+            })
+            .catch(function(resp) {
+                console.log(resp)
+            })
+        }
+    </script>
+</body>
+
+</html>
